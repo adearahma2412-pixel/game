@@ -25,6 +25,9 @@ $percobaan = $_SESSION['percobaan'];
 $pesan = "";
 $jenis_pesan = "";
 
+// Menentukan apakah permainan sudah selesai
+$game_selesai = false;
+
 // ======================================================
 // PROSES TEBAKAN
 // ======================================================
@@ -54,7 +57,7 @@ if (isset($_POST['tebak'])) {
         $percobaan = $_SESSION['percobaan'];
 
         // ==================================================
-        // PENGECEKAN JAWABAN
+        // CEK JAWABAN
         // ==================================================
 
         if ($tebakan == $x) {
@@ -65,59 +68,51 @@ if (isset($_POST['tebak'])) {
 
             $jenis_pesan = "benar";
 
-            // Menghapus session setelah menang
+            // Permainan selesai
+            $game_selesai = true;
+
+            // Menghapus session
+            unset($_SESSION['angka']);
+            unset($_SESSION['percobaan']);
+
+        } elseif ($percobaan >= 3) {
+
+            // ==================================================
+            // GAME OVER
+            // ==================================================
+
+            $pesan = "💀 GAME OVER!<br>
+                      Kamu sudah menggunakan semua kesempatan.<br>
+                      Angka yang benar adalah <strong>$x</strong>.";
+
+            $jenis_pesan = "game-over";
+
+            // Menandai permainan selesai
+            $game_selesai = true;
+
+            // Menghapus session setelah game selesai
             unset($_SESSION['angka']);
             unset($_SESSION['percobaan']);
 
         } elseif ($tebakan < $x) {
 
-            // Jika tebakan lebih kecil dari angka rahasia
-            if ($percobaan >= 3) {
+            $sisa = 3 - $percobaan;
 
-                $pesan = "💀 GAME OVER!<br>
-                          Kesempatan kamu sudah habis.<br>
-                          Angka yang benar adalah <strong>$x</strong>";
+            $pesan = "⬆️ TEBAKAN TERLALU KECIL!<br>
+                      Coba angka yang lebih besar.<br>
+                      Masih ada <strong>$sisa kesempatan</strong>.";
 
-                $jenis_pesan = "salah";
-
-                unset($_SESSION['angka']);
-                unset($_SESSION['percobaan']);
-
-            } else {
-
-                $sisa = 3 - $percobaan;
-
-                $pesan = "⬆️ TEBAKAN TERLALU KECIL!<br>
-                          Coba angka yang lebih besar.<br>
-                          Masih ada <strong>$sisa kesempatan</strong>.";
-
-                $jenis_pesan = "salah";
-            }
+            $jenis_pesan = "salah";
 
         } else {
 
-            // Jika tebakan lebih besar dari angka rahasia
-            if ($percobaan >= 3) {
+            $sisa = 3 - $percobaan;
 
-                $pesan = "💀 GAME OVER!<br>
-                          Kesempatan kamu sudah habis.<br>
-                          Angka yang benar adalah <strong>$x</strong>";
+            $pesan = "⬇️ TEBAKAN TERLALU BESAR!<br>
+                      Coba angka yang lebih kecil.<br>
+                      Masih ada <strong>$sisa kesempatan</strong>.";
 
-                $jenis_pesan = "salah";
-
-                unset($_SESSION['angka']);
-                unset($_SESSION['percobaan']);
-
-            } else {
-
-                $sisa = 3 - $percobaan;
-
-                $pesan = "⬇️ TEBAKAN TERLALU BESAR!<br>
-                          Coba angka yang lebih kecil.<br>
-                          Masih ada <strong>$sisa kesempatan</strong>.";
-
-                $jenis_pesan = "salah";
-            }
+            $jenis_pesan = "salah";
         }
     }
 }
@@ -366,6 +361,19 @@ if (isset($_POST['tebak'])) {
                 0 0 12px rgba(239, 68, 68, 0.3);
         }
 
+        /* Tampilan khusus Game Over */
+        .game-over {
+
+            background: rgba(127, 29, 29, 0.25);
+
+            border: 2px solid #ef4444;
+
+            color: #f87171;
+
+            box-shadow:
+                0 0 15px rgba(239, 68, 68, 0.5);
+        }
+
         .footer {
 
             margin-top: 25px;
@@ -418,22 +426,26 @@ if (isset($_POST['tebak'])) {
 
     </div>
 
-    <form method="post">
+    <?php if (!$game_selesai) { ?>
 
-        <input
-            type="number"
-            name="tebak"
-            min="1"
-            max="5"
-            placeholder="1 - 5"
-            required
-        >
+        <form method="post">
 
-        <button type="submit">
-            🚀 SUBMIT GUESS
-        </button>
+            <input
+                type="number"
+                name="tebak"
+                min="1"
+                max="5"
+                placeholder="1 - 5"
+                required
+            >
 
-    </form>
+            <button type="submit">
+                🚀 SUBMIT GUESS
+            </button>
+
+        </form>
+
+    <?php } ?>
 
     <?php if ($pesan != "") { ?>
 
