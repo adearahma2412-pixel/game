@@ -29,11 +29,33 @@ $jenis_pesan = "";
 $game_selesai = false;
 
 // ======================================================
+// MEMULAI PERMAINAN BARU
+// ======================================================
+
+if (isset($_POST['main_lagi'])) {
+
+    // Menghapus data permainan sebelumnya
+    unset($_SESSION['angka']);
+    unset($_SESSION['percobaan']);
+
+    // Membuat angka rahasia baru
+    $_SESSION['angka'] = rand(1, 5);
+
+    // Mengatur percobaan kembali ke 0
+    $_SESSION['percobaan'] = 0;
+
+    // Memperbarui nilai permainan
+    $x = $_SESSION['angka'];
+    $percobaan = $_SESSION['percobaan'];
+}
+
+// ======================================================
 // PROSES TEBAKAN
 // ======================================================
 
 if (isset($_POST['tebak'])) {
 
+    // Mengambil angka yang dimasukkan pengguna
     $tebakan = $_POST['tebak'];
 
     // ==================================================
@@ -52,6 +74,7 @@ if (isset($_POST['tebak'])) {
         // Menambahkan jumlah percobaan
         $_SESSION['percobaan']++;
 
+        // Memperbarui jumlah percobaan
         $percobaan = $_SESSION['percobaan'];
 
         // ==================================================
@@ -66,12 +89,18 @@ if (isset($_POST['tebak'])) {
 
             $jenis_pesan = "benar";
 
+            // Menandai permainan selesai
             $game_selesai = true;
 
+            // Menghapus session permainan
             unset($_SESSION['angka']);
             unset($_SESSION['percobaan']);
 
         } elseif ($percobaan >= 3) {
+
+            // ==================================================
+            // GAME OVER
+            // ==================================================
 
             $pesan = "💀 GAME OVER!<br>
                       Kamu sudah menggunakan semua kesempatan.<br>
@@ -79,13 +108,16 @@ if (isset($_POST['tebak'])) {
 
             $jenis_pesan = "game-over";
 
+            // Menandai permainan selesai
             $game_selesai = true;
 
+            // Menghapus session permainan
             unset($_SESSION['angka']);
             unset($_SESSION['percobaan']);
 
         } elseif ($tebakan < $x) {
 
+            // Tebakan terlalu kecil
             $sisa = 3 - $percobaan;
 
             $pesan = "⬆️ TEBAKAN TERLALU KECIL!<br>
@@ -96,6 +128,7 @@ if (isset($_POST['tebak'])) {
 
         } else {
 
+            // Tebakan terlalu besar
             $sisa = 3 - $percobaan;
 
             $pesan = "⬇️ TEBAKAN TERLALU BESAR!<br>
@@ -133,7 +166,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           BACKGROUND
+           BODY
         ================================================= */
 
         body {
@@ -183,7 +216,6 @@ if (isset($_POST['tebak'])) {
             transition: 0.4s;
         }
 
-        /* Efek ketika mouse berada di game box */
         .game-box:hover {
 
             transform: translateY(-5px);
@@ -211,7 +243,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           JUDUL
+           TITLE
         ================================================= */
 
         h1 {
@@ -240,7 +272,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           ATURAN GAME
+           RULES
         ================================================= */
 
         .rules {
@@ -268,7 +300,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           JUMLAH PERCOBAAN
+           ATTEMPT
         ================================================= */
 
         .attempt {
@@ -360,6 +392,8 @@ if (isset($_POST['tebak'])) {
             cursor: pointer;
 
             transition: 0.3s;
+
+            margin-bottom: 10px;
         }
 
         button:hover {
@@ -396,7 +430,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           HASIL BENAR
+           BENAR
         ================================================= */
 
         .benar {
@@ -412,7 +446,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           HASIL SALAH
+           SALAH
         ================================================= */
 
         .salah {
@@ -461,7 +495,7 @@ if (isset($_POST['tebak'])) {
         }
 
         /* =================================================
-           ANIMASI
+           ANIMATIONS
         ================================================= */
 
         @keyframes glow {
@@ -598,6 +632,18 @@ if (isset($_POST['tebak'])) {
             <?php echo $pesan; ?>
 
         </div>
+
+    <?php } ?>
+
+    <?php if ($game_selesai) { ?>
+
+        <form method="post">
+
+            <button type="submit" name="main_lagi">
+                🔄 MAIN LAGI
+            </button>
+
+        </form>
 
     <?php } ?>
 
