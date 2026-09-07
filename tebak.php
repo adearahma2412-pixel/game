@@ -5,12 +5,12 @@ session_start();
 // INISIALISASI PERMAINAN
 // ======================================================
 
-// Membuat angka rahasia hanya sekali
+// Membuat angka rahasia secara acak dari 1 sampai 5
 if (!isset($_SESSION['angka'])) {
     $_SESSION['angka'] = rand(1, 5);
 }
 
-// Membuat jumlah percobaan jika belum ada
+// Membuat jumlah percobaan jika belum tersedia
 if (!isset($_SESSION['percobaan'])) {
     $_SESSION['percobaan'] = 0;
 }
@@ -31,7 +31,10 @@ if (isset($_POST['tebak'])) {
     // Mengambil angka yang dimasukkan pengguna
     $tebakan = $_POST['tebak'];
 
-    // Validasi input
+    // ==================================================
+    // VALIDASI INPUT
+    // ==================================================
+
     if ($tebakan < 1 || $tebakan > 5) {
 
         $pesan = "⚠️ INPUT TIDAK VALID!<br>
@@ -76,6 +79,7 @@ if (isset($_POST['tebak'])) {
 
         } else {
 
+            // Menghitung sisa kesempatan
             $sisa = 3 - $percobaan;
 
             $pesan = "⚡ SALAH!<br>
