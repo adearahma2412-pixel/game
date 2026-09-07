@@ -15,17 +15,17 @@ if (!isset($_SESSION['percobaan'])) {
     $_SESSION['percobaan'] = 0;
 }
 
-// Mengambil angka rahasia dari session
+// Mengambil angka rahasia
 $x = $_SESSION['angka'];
 
 // Mengambil jumlah percobaan
 $percobaan = $_SESSION['percobaan'];
 
-// Variabel untuk pesan hasil
+// Variabel pesan
 $pesan = "";
 $jenis_pesan = "";
 
-// Menentukan apakah permainan sudah selesai
+// Menentukan status permainan
 $game_selesai = false;
 
 // ======================================================
@@ -34,7 +34,6 @@ $game_selesai = false;
 
 if (isset($_POST['tebak'])) {
 
-    // Mengambil angka yang dimasukkan pengguna
     $tebakan = $_POST['tebak'];
 
     // ==================================================
@@ -53,7 +52,6 @@ if (isset($_POST['tebak'])) {
         // Menambahkan jumlah percobaan
         $_SESSION['percobaan']++;
 
-        // Memperbarui jumlah percobaan
         $percobaan = $_SESSION['percobaan'];
 
         // ==================================================
@@ -68,18 +66,12 @@ if (isset($_POST['tebak'])) {
 
             $jenis_pesan = "benar";
 
-            // Permainan selesai
             $game_selesai = true;
 
-            // Menghapus session
             unset($_SESSION['angka']);
             unset($_SESSION['percobaan']);
 
         } elseif ($percobaan >= 3) {
-
-            // ==================================================
-            // GAME OVER
-            // ==================================================
 
             $pesan = "💀 GAME OVER!<br>
                       Kamu sudah menggunakan semua kesempatan.<br>
@@ -87,10 +79,8 @@ if (isset($_POST['tebak'])) {
 
             $jenis_pesan = "game-over";
 
-            // Menandai permainan selesai
             $game_selesai = true;
 
-            // Menghapus session setelah game selesai
             unset($_SESSION['angka']);
             unset($_SESSION['percobaan']);
 
@@ -131,6 +121,10 @@ if (isset($_POST['tebak'])) {
 
     <style>
 
+        /* =================================================
+           RESET
+        ================================================= */
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -138,7 +132,12 @@ if (isset($_POST['tebak'])) {
             font-family: Arial, sans-serif;
         }
 
+        /* =================================================
+           BACKGROUND
+        ================================================= */
+
         body {
+
             min-height: 100vh;
 
             display: flex;
@@ -155,7 +154,13 @@ if (isset($_POST['tebak'])) {
                 );
 
             color: white;
+
+            padding: 20px;
         }
+
+        /* =================================================
+           GAME BOX
+        ================================================= */
 
         .game-box {
 
@@ -174,7 +179,23 @@ if (isset($_POST['tebak'])) {
             box-shadow:
                 0 0 15px #22d3ee,
                 0 0 40px rgba(34, 211, 238, 0.3);
+
+            transition: 0.4s;
         }
+
+        /* Efek ketika mouse berada di game box */
+        .game-box:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 0 20px #22d3ee,
+                0 0 50px rgba(34, 211, 238, 0.5);
+        }
+
+        /* =================================================
+           LOGO
+        ================================================= */
 
         .logo {
 
@@ -185,7 +206,13 @@ if (isset($_POST['tebak'])) {
             text-shadow:
                 0 0 10px #22d3ee,
                 0 0 25px #22d3ee;
+
+            animation: glow 2s infinite alternate;
         }
+
+        /* =================================================
+           JUDUL
+        ================================================= */
 
         h1 {
 
@@ -195,9 +222,12 @@ if (isset($_POST['tebak'])) {
 
             letter-spacing: 2px;
 
-            text-shadow: 0 0 10px #22d3ee;
+            text-shadow:
+                0 0 10px #22d3ee;
 
             margin-bottom: 10px;
+
+            animation: titleGlow 2s infinite alternate;
         }
 
         .subtitle {
@@ -208,6 +238,10 @@ if (isset($_POST['tebak'])) {
 
             margin-bottom: 25px;
         }
+
+        /* =================================================
+           ATURAN GAME
+        ================================================= */
 
         .rules {
 
@@ -233,6 +267,10 @@ if (isset($_POST['tebak'])) {
             color: #a855f7;
         }
 
+        /* =================================================
+           JUMLAH PERCOBAAN
+        ================================================= */
+
         .attempt {
 
             background: #0f172a;
@@ -254,6 +292,10 @@ if (isset($_POST['tebak'])) {
 
             color: #22d3ee;
         }
+
+        /* =================================================
+           INPUT
+        ================================================= */
 
         input {
 
@@ -284,8 +326,13 @@ if (isset($_POST['tebak'])) {
 
             border-color: #22d3ee;
 
-            box-shadow: 0 0 12px #22d3ee;
+            box-shadow:
+                0 0 12px #22d3ee;
         }
+
+        /* =================================================
+           BUTTON
+        ================================================= */
 
         button {
 
@@ -324,6 +371,15 @@ if (isset($_POST['tebak'])) {
                 0 0 25px #8b5cf6;
         }
 
+        button:active {
+
+            transform: scale(0.98);
+        }
+
+        /* =================================================
+           HASIL
+        ================================================= */
+
         .hasil {
 
             margin-top: 20px;
@@ -335,7 +391,13 @@ if (isset($_POST['tebak'])) {
             line-height: 1.7;
 
             font-weight: bold;
+
+            animation: muncul 0.5s ease;
         }
+
+        /* =================================================
+           HASIL BENAR
+        ================================================= */
 
         .benar {
 
@@ -349,6 +411,10 @@ if (isset($_POST['tebak'])) {
                 0 0 12px rgba(34, 197, 94, 0.4);
         }
 
+        /* =================================================
+           HASIL SALAH
+        ================================================= */
+
         .salah {
 
             background: rgba(239, 68, 68, 0.15);
@@ -361,7 +427,10 @@ if (isset($_POST['tebak'])) {
                 0 0 12px rgba(239, 68, 68, 0.3);
         }
 
-        /* Tampilan khusus Game Over */
+        /* =================================================
+           GAME OVER
+        ================================================= */
+
         .game-over {
 
             background: rgba(127, 29, 29, 0.25);
@@ -372,7 +441,13 @@ if (isset($_POST['tebak'])) {
 
             box-shadow:
                 0 0 15px rgba(239, 68, 68, 0.5);
+
+            animation: gameOverGlow 1s infinite alternate;
         }
+
+        /* =================================================
+           FOOTER
+        ================================================= */
 
         .footer {
 
@@ -383,6 +458,75 @@ if (isset($_POST['tebak'])) {
             font-size: 12px;
 
             letter-spacing: 1px;
+        }
+
+        /* =================================================
+           ANIMASI
+        ================================================= */
+
+        @keyframes glow {
+
+            from {
+
+                text-shadow:
+                    0 0 10px #22d3ee,
+                    0 0 20px #22d3ee;
+            }
+
+            to {
+
+                text-shadow:
+                    0 0 20px #22d3ee,
+                    0 0 40px #22d3ee;
+            }
+        }
+
+        @keyframes titleGlow {
+
+            from {
+
+                text-shadow:
+                    0 0 5px #22d3ee;
+            }
+
+            to {
+
+                text-shadow:
+                    0 0 20px #22d3ee,
+                    0 0 30px #22d3ee;
+            }
+        }
+
+        @keyframes muncul {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(10px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gameOverGlow {
+
+            from {
+
+                box-shadow:
+                    0 0 10px rgba(239, 68, 68, 0.3);
+            }
+
+            to {
+
+                box-shadow:
+                    0 0 25px rgba(239, 68, 68, 0.7);
+            }
         }
 
     </style>
