@@ -18,6 +18,9 @@ if (!isset($_SESSION['percobaan'])) {
 // Mengambil angka rahasia dari session
 $x = $_SESSION['angka'];
 
+// Mengambil jumlah percobaan
+$percobaan = $_SESSION['percobaan'];
+
 // Variabel untuk pesan hasil
 $pesan = "";
 $jenis_pesan = "";
@@ -47,7 +50,7 @@ if (isset($_POST['tebak'])) {
         // Menambahkan jumlah percobaan
         $_SESSION['percobaan']++;
 
-        // Mengambil jumlah percobaan terbaru
+        // Memperbarui jumlah percobaan
         $percobaan = $_SESSION['percobaan'];
 
         // ==================================================
@@ -57,7 +60,8 @@ if (isset($_POST['tebak'])) {
         if ($tebakan == $x) {
 
             $pesan = "🎉 TEBAKAN BENAR!<br>
-                      Angka rahasianya adalah <strong>$x</strong>";
+                      Angka rahasianya adalah <strong>$x</strong><br>
+                      Kamu berhasil dalam <strong>$percobaan percobaan</strong>.";
 
             $jenis_pesan = "benar";
 
@@ -194,7 +198,7 @@ if (isset($_POST['tebak'])) {
 
             border-radius: 8px;
 
-            margin-bottom: 25px;
+            margin-bottom: 20px;
 
             color: #cbd5e1;
 
@@ -204,6 +208,29 @@ if (isset($_POST['tebak'])) {
         .rules strong {
 
             color: #a855f7;
+        }
+
+        /* Menampilkan informasi percobaan */
+        .attempt {
+
+            background: #0f172a;
+
+            border: 1px solid #334155;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+        }
+
+        .attempt strong {
+
+            color: #22d3ee;
         }
 
         input {
@@ -354,6 +381,14 @@ if (isset($_POST['tebak'])) {
         • Angka rahasia tetap sama selama permainan<br>
 
         • Tebak angka dengan tepat untuk menang!
+
+    </div>
+
+    <!-- Menampilkan jumlah percobaan -->
+    <div class="attempt">
+
+        Percobaan:
+        <strong><?php echo $percobaan; ?> / 3</strong>
 
     </div>
 
