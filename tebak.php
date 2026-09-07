@@ -1,27 +1,37 @@
 <?php
-
-// Game Tebak Angka menggunakan PHP Session
 session_start();
+
+// ======================================================
+// INISIALISASI PERMAINAN
+// ======================================================
 
 // Membuat angka rahasia hanya sekali
 if (!isset($_SESSION['angka'])) {
     $_SESSION['angka'] = rand(1, 5);
+}
+
+// Membuat jumlah percobaan jika belum ada
+if (!isset($_SESSION['percobaan'])) {
     $_SESSION['percobaan'] = 0;
 }
 
-// Menyimpan angka rahasia
+// Mengambil angka rahasia dari session
 $x = $_SESSION['angka'];
 
+// Variabel untuk pesan hasil
 $pesan = "";
 $jenis_pesan = "";
 
-// Mengecek apakah tombol tebak ditekan
+// ======================================================
+// PROSES TEBAKAN
+// ======================================================
+
 if (isset($_POST['tebak'])) {
 
-    // Mengambil input dari user
+    // Mengambil angka yang dimasukkan pengguna
     $tebakan = $_POST['tebak'];
 
-    // Validasi angka harus 1 sampai 5
+    // Validasi input
     if ($tebakan < 1 || $tebakan > 5) {
 
         $pesan = "⚠️ INPUT TIDAK VALID!<br>
@@ -31,12 +41,16 @@ if (isset($_POST['tebak'])) {
 
     } else {
 
-        // Menambah jumlah percobaan
+        // Menambahkan jumlah percobaan
         $_SESSION['percobaan']++;
 
+        // Mengambil jumlah percobaan terbaru
         $percobaan = $_SESSION['percobaan'];
 
-        // Mengecek apakah tebakan benar
+        // ==================================================
+        // CEK JAWABAN
+        // ==================================================
+
         if ($tebakan == $x) {
 
             $pesan = "🎉 TEBAKAN BENAR!<br>
@@ -50,20 +64,18 @@ if (isset($_POST['tebak'])) {
 
         } elseif ($percobaan >= 3) {
 
-            // Jika kesempatan sudah habis
             $pesan = "💀 GAME OVER!<br>
                       Kesempatan kamu sudah habis.<br>
                       Angka yang benar adalah <strong>$x</strong>";
 
             $jenis_pesan = "salah";
 
-            // Menghapus session setelah game over
+            // Menghapus session setelah game selesai
             unset($_SESSION['angka']);
             unset($_SESSION['percobaan']);
 
         } else {
 
-            // Menghitung kesempatan yang tersisa
             $sisa = 3 - $percobaan;
 
             $pesan = "⚡ SALAH!<br>
@@ -73,7 +85,6 @@ if (isset($_POST['tebak'])) {
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -116,6 +127,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .game-box {
+
             width: 420px;
 
             padding: 35px;
@@ -134,6 +146,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .logo {
+
             font-size: 65px;
 
             margin-bottom: 10px;
@@ -144,6 +157,7 @@ if (isset($_POST['tebak'])) {
         }
 
         h1 {
+
             color: #22d3ee;
 
             font-size: 28px;
@@ -156,6 +170,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .subtitle {
+
             color: #94a3b8;
 
             font-size: 14px;
@@ -164,6 +179,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .rules {
+
             text-align: left;
 
             background: #020617;
@@ -182,10 +198,12 @@ if (isset($_POST['tebak'])) {
         }
 
         .rules strong {
+
             color: #a855f7;
         }
 
         input {
+
             width: 100%;
 
             padding: 14px;
@@ -210,12 +228,14 @@ if (isset($_POST['tebak'])) {
         }
 
         input:focus {
+
             border-color: #22d3ee;
 
             box-shadow: 0 0 12px #22d3ee;
         }
 
         button {
+
             width: 100%;
 
             padding: 14px;
@@ -224,11 +244,12 @@ if (isset($_POST['tebak'])) {
 
             border-radius: 8px;
 
-            background: linear-gradient(
-                90deg,
-                #06b6d4,
-                #8b5cf6
-            );
+            background:
+                linear-gradient(
+                    90deg,
+                    #06b6d4,
+                    #8b5cf6
+                );
 
             color: white;
 
@@ -242,6 +263,7 @@ if (isset($_POST['tebak'])) {
         }
 
         button:hover {
+
             transform: translateY(-2px);
 
             box-shadow:
@@ -250,6 +272,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .hasil {
+
             margin-top: 20px;
 
             padding: 15px;
@@ -262,6 +285,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .benar {
+
             background: rgba(34, 197, 94, 0.15);
 
             border: 1px solid #22c55e;
@@ -273,6 +297,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .salah {
+
             background: rgba(239, 68, 68, 0.15);
 
             border: 1px solid #ef4444;
@@ -284,6 +309,7 @@ if (isset($_POST['tebak'])) {
         }
 
         .footer {
+
             margin-top: 25px;
 
             color: #64748b;
@@ -315,21 +341,13 @@ if (isset($_POST['tebak'])) {
 
     <div class="rules">
 
-        <strong>⚡ GAME RULES</strong>
+        <strong>⚡ GAME RULES</strong><br>
 
-        <br>
+        • Pilih angka dari <b>1 sampai 5</b><br>
 
-        • Pilih angka dari <b>1 sampai 5</b>
+        • Kamu memiliki <b>3 kesempatan</b><br>
 
-        <br>
-
-        • Kamu memiliki <b>3 kesempatan</b>
-
-        <br>
-
-        • Angka rahasia tetap sama selama permainan
-
-        <br>
+        • Angka rahasia tetap sama selama permainan<br>
 
         • Tebak angka dengan tepat untuk menang!
 
